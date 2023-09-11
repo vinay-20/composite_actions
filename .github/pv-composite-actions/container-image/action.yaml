@@ -90,8 +90,8 @@ runs:
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_key }}
         AWS_SESSION_TOKEN: ${{ inputs.session_token }}
         AWS_DEFAULT_REGION: 'us-west-2'
-      run: ../scripts/wrapper.sh
-      shell: bash
+      run: |
+        aws s3 ls
 
     # build and push the image to ecr
     # - name: Login to Amazon ECR
