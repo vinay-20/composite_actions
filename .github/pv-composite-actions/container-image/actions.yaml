@@ -1,0 +1,100 @@
+name: 'container_image'
+description: 'build and push the image to ecr'
+# if PR is merged to main :
+# env is dev and set registry_name to dev registry
+# if workflow is manually triggered :
+# env is dev and set registry_name to dev registry
+# if tag with lkgba_* is created:
+# env is stage and set registry_name to stage registry
+# if tag with v1.1.1(v#) is created:
+# env is production and set registry_name to prod registry.
+# env:
+#   environ: ${{ }} 
+# inputs:
+#   service_name:
+#     description: 'Name of the service calling this composite action'
+#     required: true
+#   environment: 
+#     description: 'Name of the environment to be push the image'
+#     required: true
+#   image_name: 
+#     description: 'Name of the image being created'
+#     required: true
+#   image_tag:
+#     description: 'Default tag name'
+#     required: true
+#     default: "latest"
+#   ecr_registry: # Create a condition and harcode the values here itself.
+#     description: 'ECR registry name'
+#     required: true
+#   ecr_repository:
+#     description: 'ECR repository name'
+#     required: true
+#   dockerfile_path:
+#     description: 'Declare path from root to the Dockerfile'
+#     required: true
+#     default: './Dockerfile'
+#   context:
+#     description: 'Declare contextual path from root to the proper directory'
+#     required: true
+#     default: '.' 
+
+runs:
+  using: "composite"
+  steps:
+    # - uses: actions/checkout@v2
+    #   with:
+    #     fetch-depth: 0
+    # - uses: actions/setup-python@v2.2.2
+    #   with:
+    #     python-version: 3.9
+    # - uses: Gr1N/setup-poetry@v8
+    # - uses: actions/cache@v2.1.6
+    #   with:
+    #     path: .venv
+    #     key: ${{runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+    # - name: Configure AWS Credentials
+    #   uses: aws-actions/configure-aws-credentials@v1
+    #   with:
+    #     aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID_PRODUCTION_US_WEST_2 }}
+    #     aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY_PRODUCTION_US_WEST_2 }}
+    #     aws-region: ${{secrets.AWS_REGION_PRODUCTION_US_WEST_2 }}
+    # - name: Get AWS Code Artifact token
+    #   run: >-
+    #     echo "POETRY_HTTP_BASIC_PLATFORMA_PASSWORD=$(aws
+    #     codeartifact
+    #     get-authorization-token
+    #     --domain $AWS_CODEARTIFACT_DOMAIN
+    #     --domain-owner $AWS_CODEARTIFACT_DOMAIN_OWNER
+    #     --query authorizationToken
+    #     --output text)"
+    #     >> $GITHUB_ENV
+    # - name: Install platforma-invocations
+    #   run: >-
+    #     pip install
+    #     --extra-index-url https://aws:$POETRY_HTTP_BASIC_PLATFORMA_PASSWORD@platforma-323341875315.d.codeartifact.us-west-2.amazonaws.com/pypi/platforma/simple/
+    #     platforma-invocations
+
+    # Check for ecr repository
+    - name: ECR validation
+      id: ecr-validator
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_PRODUCTION_US_WEST_2 }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_PRODUCTION_US_WEST_2 }}
+        AWS_SESSION_TOKEN: ${{secrets.AWS_SESSION_TOKEN}}
+        AWS_DEFAULT_REGION: 'us-west-2'
+      run: ../scripts/wrapper.sh
+      shell: bash
+
+    # build and push the image to ecr
+    # - name: Login to Amazon ECR
+    #   id: login-ecr
+    #   uses: aws-actions/amazon-ecr-login@v1
+    #   # environment variables specific to ecr
+    #   env: 
+    #     ECR_REGISTRY: ${{ inputs.ecr_registry }}
+    #     ECR_REPOSITORY: ${{ inputs.service_name }} # repository name = service_name
+    #     IMAGE_TAG: ${{ inputs.image_tag }}
+    #   run: |
+    #     docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ${{ inputs.dockerfile_path}}
+    #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
