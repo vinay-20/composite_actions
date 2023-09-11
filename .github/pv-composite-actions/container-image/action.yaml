@@ -1,15 +1,5 @@
 name: 'container_image'
 description: 'build and push the image to ecr'
-# if PR is merged to main :
-# env is dev and set registry_name to dev registry
-# if workflow is manually triggered :
-# env is dev and set registry_name to dev registry
-# if tag with lkgba_* is created:
-# env is stage and set registry_name to stage registry
-# if tag with v1.1.1(v#) is created:
-# env is production and set registry_name to prod registry.
-# env:
-#   environ: ${{ }} 
 # inputs:
 #   service_name:
 #     description: 'Name of the service calling this composite action'
@@ -38,12 +28,21 @@ description: 'build and push the image to ecr'
 #     description: 'Declare contextual path from root to the proper directory'
 #     required: true
 #     default: '.'
+#   aws_access_key:
+#     description: 'Valid aws access key'
+#     required: true
+#   aws_secret_key:
+#     description: 'Valid aws secret key'
+#     required: true
+
 inputs:
   aws_access_key:
     required: true
   aws_secret_key:
     required: true
   session_token:
+    required: true
+  repository_name:
     required: true
 
 runs:
@@ -91,7 +90,13 @@ runs:
         AWS_SESSION_TOKEN: ${{ inputs.session_token }}
         AWS_DEFAULT_REGION: 'us-west-2'
       run: |
-        aws s3 ls
+        IMAGE_META="$( aws ecr describe-images --repository-name=${{ inputs.repository_name }} 2> /dev/null )"
+        if [[ $? == 0 ]]; then
+            echo "Found repository with the name ${{ inputs.repository_name }}"
+        else
+            echo "repository with the name ${{ inputs.repository_name }} not found"
+            exit 1
+        fi
       shell: bash
 
     # build and push the image to ecr
