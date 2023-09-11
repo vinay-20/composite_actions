@@ -37,7 +37,14 @@ description: 'build and push the image to ecr'
 #   context:
 #     description: 'Declare contextual path from root to the proper directory'
 #     required: true
-#     default: '.' 
+#     default: '.'
+inputs:
+  aws_access_key:
+    required: true
+  aws_secret_key:
+    required: true
+  session_token:
+    required: true
 
 runs:
   using: "composite"
@@ -79,9 +86,9 @@ runs:
     - name: ECR validation
       id: ecr-validator
       env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_PRODUCTION_US_WEST_2 }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_PRODUCTION_US_WEST_2 }}
-        AWS_SESSION_TOKEN: ${{secrets.AWS_SESSION_TOKEN}}
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_key }}
+        AWS_SESSION_TOKEN: ${{ inputs.session_token }}
         AWS_DEFAULT_REGION: 'us-west-2'
       run: ../scripts/wrapper.sh
       shell: bash
