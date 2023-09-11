@@ -90,7 +90,7 @@ runs:
         AWS_SESSION_TOKEN: ${{ inputs.session_token }}
         AWS_DEFAULT_REGION: 'us-west-2'
       run: |
-        IMAGE_META="$( aws ecr describe-images --repository-name=${{ inputs.repository_name }} 2> /dev/null )"
+        IMAGE_META="$( aws ecr describe-images --repository-name=${{ inputs.repository_name }} )"
         if [[ $? == 0 ]]; then
             IMAGE_TAG=$( echo ${IMAGE_META} | jq '.imageDetails[0].imageTags[0]' -r )
             echo "Found Image with the name ${{ inputs.repository_name }} and the current tag is $IMAGE_TAG"
