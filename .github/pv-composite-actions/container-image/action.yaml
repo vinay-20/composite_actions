@@ -106,7 +106,8 @@ runs:
         echo ${{ inputs.service_name }}
         echo ${{ inputs.environment }}
         echo ${{ inputs.ecr_repository }}
-        
+      shell: bash
+
     # build and push the image to ecr
     # - name: Login to Amazon ECR
     #   id: login-ecr
