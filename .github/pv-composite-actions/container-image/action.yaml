@@ -106,9 +106,9 @@ runs:
 
     - name: outputs
       run: |
-        echo ${ECR_REPOSITORY}
+        echo ${{ inputs.service_name }}
         echo ${{ inputs.environment }}
-        echo ${ECR_REGISTRY}
+        echo ${{ inputs.ecr_registry }}
       shell: bash
 
     # build and push the image to ecr
