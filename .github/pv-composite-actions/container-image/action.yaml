@@ -51,7 +51,7 @@ runs:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_key }}
         AWS_SESSION_TOKEN: ${{ inputs.aws_session_token }}
-        AWS_DEFAULT_REGION: "us-west-2"
+        AWS_DEFAULT_REGION: "${{ inputs.aws_region }}"
         ECR_REPOSITORY: ${{ inputs.service_name }} # repository name = service_name
       run: |
         echo "AWS_DEFAULT_REGION - $AWS_DEFAULT_REGION"
