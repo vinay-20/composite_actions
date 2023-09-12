@@ -51,11 +51,6 @@ inputs:
   image_tag:
     required: true
 
-env:
-    ECR_REGISTRY: ${{ inputs.ecr_registry }}
-    ECR_REPOSITORY: ${{ inputs.service_name }} # repository name = service_name
-    IMAGE_TAG: ${{ inputs.image_tag }}
-
 runs:
   using: "composite"
   steps:
@@ -100,6 +95,7 @@ runs:
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_key }}
         AWS_SESSION_TOKEN: ${{ inputs.session_token }}
         AWS_DEFAULT_REGION: 'us-west-2'
+        ECR_REPOSITORY: ${{ inputs.service_name }} # repository name = service_name
       run: |
         IMAGE_META="$( aws ecr describe-images --repository-name=${ECR_REPOSITORY} )"
         if [[ $? == 0 ]]; then
