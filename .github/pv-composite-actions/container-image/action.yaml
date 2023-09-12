@@ -53,6 +53,9 @@ runs:
         AWS_DEFAULT_REGION: $aws_region
         ECR_REPOSITORY: ${{ inputs.service_name }} # repository name = service_name
       run: |
+        echo "AWS_DEFAULT_REGION - $AWS_DEFAULT_REGION"
+        echo "aws_region - $aws_region"
+        echo "AWS_ACCESS_KEY_ID - $AWS_ACCESS_KEY_ID"
         IMAGE_META="$( aws ecr describe-images --repository-name=${ECR_REPOSITORY} )"
         if [[ $? == 0 ]]; then
             IMAGE_TAG=$( echo ${IMAGE_META} | jq '.imageDetails[0].imageTags[0]' -r )
