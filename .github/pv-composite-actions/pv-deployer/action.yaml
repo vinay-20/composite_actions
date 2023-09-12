@@ -36,7 +36,7 @@ runs:
   steps:
     - name: outputs in pv composite
       run: |
-        echo "AWS region - $aws_region"
+        echo "AWS region in pv deployer - $aws_region"
       shell: bash
 
     - uses: vinay-20/composite_actions/.github/pv-composite-actions/container-image@main
