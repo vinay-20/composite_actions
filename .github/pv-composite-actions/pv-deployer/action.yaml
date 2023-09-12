@@ -45,7 +45,7 @@ runs:
         aws_access_key: ${{ inputs.aws_access_key }}
         aws_secret_key: ${{ inputs.aws_secret_key }}
         aws_session_token: ${{ inputs.aws_session_token }}
-        aws_region: ${{ inputs.aws_region }}
+        aws_region: $aws_region
         service_name: ${{ inputs.service_name }}
         environment: ${{ inputs.environment }}
         ecr_registry: ${{ inputs.ecr_registry }}
