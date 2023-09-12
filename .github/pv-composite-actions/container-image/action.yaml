@@ -48,6 +48,8 @@ inputs:
     required: true
   ecr_registry:
     required: true
+  image_tag:
+    required: true
 
 env:
     ECR_REGISTRY: ${{ inputs.ecr_registry }}
