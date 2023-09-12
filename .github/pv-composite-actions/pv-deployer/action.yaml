@@ -21,7 +21,8 @@ inputs:
     description: 'Valid aws secret key'
     required: true
   aws_region:
-    description: 'AWS region to be set for cli operations' # Not mandatory because multi region deployment happens only in production.
+    description: 'AWS region to be set for cli operations'
+    required: true
   operation:
     required: true
   aws_session_token:
@@ -45,7 +46,7 @@ runs:
         aws_access_key: ${{ inputs.aws_access_key }}
         aws_secret_key: ${{ inputs.aws_secret_key }}
         aws_session_token: ${{ inputs.aws_session_token }}
-        aws_region: $aws_region
+        aws_region: ${{ inputs.aws_region }}
         service_name: ${{ inputs.service_name }}
         environment: ${{ inputs.environment }}
         ecr_registry: ${{ inputs.ecr_registry }}

@@ -21,7 +21,7 @@ inputs:
     description: 'Valid aws secret key'
     required: true
   aws_region:
-    description: 'AWS region to be set for cli operations' # Not mandatory because multi region deployment happens only in production.
+    description: 'AWS region to be set for cli operations'
     required: true
   aws_codeartifact_domain:
     description: 'AWS Code Artifact domain'
