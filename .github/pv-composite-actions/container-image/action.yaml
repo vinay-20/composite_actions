@@ -46,8 +46,13 @@ inputs:
     required: true
   environment:
     required: true
-  ecr_repository:
+  ecr_registry:
     required: true
+
+env:
+    ECR_REGISTRY: ${{ inputs.ecr_registry }}
+    ECR_REPOSITORY: ${{ inputs.service_name }} # repository name = service_name
+    IMAGE_TAG: ${{ inputs.image_tag }}
 
 runs:
   using: "composite"
@@ -94,18 +99,18 @@ runs:
         AWS_SESSION_TOKEN: ${{ inputs.session_token }}
         AWS_DEFAULT_REGION: 'us-west-2'
       run: |
-        IMAGE_META="$( aws ecr describe-images --repository-name=${{ inputs.ecr_repository }} )"
+        IMAGE_META="$( aws ecr describe-images --repository-name=${ECR_REPOSITORY} )"
         if [[ $? == 0 ]]; then
             IMAGE_TAG=$( echo ${IMAGE_META} | jq '.imageDetails[0].imageTags[0]' -r )
-            echo "Found Image with the name ${{ inputs.ecr_repository }} and the current tag is $IMAGE_TAG"
+            echo "Found Image with the name ${ECR_REPOSITORY} and the current tag is $IMAGE_TAG"
         fi
       shell: bash
 
     - name: outputs
       run: |
-        echo ${{ inputs.service_name }}
+        echo ${ECR_REPOSITORY}
         echo ${{ inputs.environment }}
-        echo ${{ inputs.ecr_repository }}
+        echo ${ECR_REGISTRY}
       shell: bash
 
     # build and push the image to ecr
