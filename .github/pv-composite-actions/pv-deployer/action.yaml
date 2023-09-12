@@ -34,6 +34,11 @@ env:
 runs:
   using: "composite"
   steps:
+    - name: outputs in pv composite
+      run: |
+        echo "AWS region - $aws_region"
+      shell: bash
+
     - uses: vinay-20/composite_actions/.github/pv-composite-actions/container-image@main
       if: ${{ inputs.operation }} == "image_build"
       with:

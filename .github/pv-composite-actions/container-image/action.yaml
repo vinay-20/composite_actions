@@ -38,6 +38,11 @@ env:
 runs:
   using: "composite"
   steps:
+    - name: outputs in container composite
+      run: |
+        echo "AWS region - $aws_region"
+      shell: bash
+
     # Check for ecr repository
     - name: ECR validation
       id: ecr-validator
