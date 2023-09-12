@@ -28,6 +28,8 @@ inputs:
   aws_codeartifact_domain_owner:
     description: 'Domain owner name'
     required: true
+  aws_session_token:
+    required: true
 
 env:
   code_artifact_uri: 'platforma-323341875315.d.codeartifact.us-west-2.amazonaws.com'
@@ -42,7 +44,7 @@ runs:
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_key }}
-        AWS_SESSION_TOKEN: ${{ inputs.session_token }}
+        AWS_SESSION_TOKEN: ${{ inputs.aws_session_token }}
         AWS_DEFAULT_REGION: 'us-west-2'
         ECR_REPOSITORY: ${{ inputs.service_name }} # repository name = service_name
       run: |
