@@ -106,9 +106,10 @@ runs:
 
     - name: outputs
       run: |
-        echo ${{ inputs.service_name }}
-        echo ${{ inputs.environment }}
-        echo ${{ inputs.ecr_registry }}
+        echo "Service Name - ${{ inputs.service_name }}"
+        echo "Env - ${{ inputs.environment }}"
+        echo "ECR Repo - ${{ inputs.ecr_registry }}"
+        echo "Image tag - ${{ inputs.image_tag }}"
       shell: bash
 
     # build and push the image to ecr
