@@ -1,0 +1,47 @@
+name: 'container_image'
+description: 'build and push the image to ecr'
+inputs:
+  service_name:
+    description: 'Name of the service calling this composite action'
+    required: true
+  environment: 
+    description: 'Name of the environment to be push the image'
+    required: true
+  image_tag:
+    description: 'Container image tag name'
+    required: true
+    default: "lkgb"
+  ecr_registry:
+    description: 'ECR registry name to respective environment'
+    required: true
+  aws_access_key:
+    description: 'Valid aws access key'
+    required: true
+  aws_secret_key:
+    description: 'Valid aws secret key'
+    required: true
+  aws_region:
+    description: 'AWS region to be set for cli operations' # Not mandatory because multi region deployment happens only in production.
+  operation:
+    required: true
+  aws_session_token:
+    required: true
+
+env:
+  code_artifact_uri: 'platforma-323341875315.d.codeartifact.us-west-2.amazonaws.com'
+  dockerfile_path: './Dockerfile'
+
+runs:
+  using: "composite"
+  steps:
+    - uses: vinay-20/composite_actions/.github/pv-composite-actions/container-image@main
+      if: ${{ inputs.operation }} == "image_build"
+      with:
+        aws_access_key: ${{ inputs.aws_access_key }}
+        aws_secret_key: ${{ inputs.aws_secret_key }}
+        aws_session_token: ${{ inputs.aws_session_token }}
+        aws_region: ${{ inputs.aws_region }}
+        service_name: ${{ inputs.service_name }}
+        environment: ${{ inputs.environment }}
+        ecr_registry: ${{ inputs.ecr_registry }}
+        image_tag: ${{ inputs.image_tag }}

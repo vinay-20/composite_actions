@@ -1,92 +1,41 @@
 name: 'container_image'
 description: 'build and push the image to ecr'
-# inputs:
-#   service_name:
-#     description: 'Name of the service calling this composite action'
-#     required: true
-#   environment: 
-#     description: 'Name of the environment to be push the image'
-#     required: true
-#   image_name: 
-#     description: 'Name of the image being created'
-#     required: true
-#   image_tag:
-#     description: 'Default tag name'
-#     required: true
-#     default: "latest"
-#   ecr_registry: # Create a condition and harcode the values here itself.
-#     description: 'ECR registry name'
-#     required: true
-#   ecr_repository:
-#     description: 'ECR repository name'
-#     required: true
-#   dockerfile_path:
-#     description: 'Declare path from root to the Dockerfile'
-#     required: true
-#     default: './Dockerfile'
-#   context:
-#     description: 'Declare contextual path from root to the proper directory'
-#     required: true
-#     default: '.'
-#   aws_access_key:
-#     description: 'Valid aws access key'
-#     required: true
-#   aws_secret_key:
-#     description: 'Valid aws secret key'
-#     required: true
-
 inputs:
-  aws_access_key:
-    required: true
-  aws_secret_key:
-    required: true
-  session_token:
-    required: true
   service_name:
+    description: 'Name of the service calling this composite action'
     required: true
-  environment:
-    required: true
-  ecr_registry:
+  environment: 
+    description: 'Name of the environment to be push the image'
     required: true
   image_tag:
+    description: 'Container image tag name'
     required: true
+    default: "lkgb"
+  ecr_registry:
+    description: 'ECR registry name to respective environment'
+    required: true
+  aws_access_key:
+    description: 'Valid aws access key'
+    required: true
+  aws_secret_key:
+    description: 'Valid aws secret key'
+    required: true
+  aws_region:
+    description: 'AWS region to be set for cli operations' # Not mandatory because multi region deployment happens only in production.
+  aws_codeartifact_domain:
+    description: 'AWS Code Artifact domain'
+    required: true
+  aws_codeartifact_domain_owner:
+    description: 'Domain owner name'
+    required: true
+
+env:
+  code_artifact_uri: 'platforma-323341875315.d.codeartifact.us-west-2.amazonaws.com'
+  dockerfile_path: './Dockerfile'
 
 runs:
   using: "composite"
   steps:
-    # - uses: actions/checkout@v2
-    #   with:
-    #     fetch-depth: 0
-    # - uses: actions/setup-python@v2.2.2
-    #   with:
-    #     python-version: 3.9
-    # - uses: Gr1N/setup-poetry@v8
-    # - uses: actions/cache@v2.1.6
-    #   with:
-    #     path: .venv
-    #     key: ${{runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
-    # - name: Configure AWS Credentials
-    #   uses: aws-actions/configure-aws-credentials@v1
-    #   with:
-    #     aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID_PRODUCTION_US_WEST_2 }}
-    #     aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY_PRODUCTION_US_WEST_2 }}
-    #     aws-region: ${{secrets.AWS_REGION_PRODUCTION_US_WEST_2 }}
-    # - name: Get AWS Code Artifact token
-    #   run: >-
-    #     echo "POETRY_HTTP_BASIC_PLATFORMA_PASSWORD=$(aws
-    #     codeartifact
-    #     get-authorization-token
-    #     --domain $AWS_CODEARTIFACT_DOMAIN
-    #     --domain-owner $AWS_CODEARTIFACT_DOMAIN_OWNER
-    #     --query authorizationToken
-    #     --output text)"
-    #     >> $GITHUB_ENV
-    # - name: Install platforma-invocations
-    #   run: >-
-    #     pip install
-    #     --extra-index-url https://aws:$POETRY_HTTP_BASIC_PLATFORMA_PASSWORD@platforma-323341875315.d.codeartifact.us-west-2.amazonaws.com/pypi/platforma/simple/
-    #     platforma-invocations
-
     # Check for ecr repository
     - name: ECR validation
       id: ecr-validator
@@ -113,13 +62,13 @@ runs:
       shell: bash
 
     # build and push the image to ecr
-    # - name: Login to Amazon ECR
-    #   id: login-ecr
+    # - name: push image to aws ecr
+    #   id: aws-ecr
     #   uses: aws-actions/amazon-ecr-login@v1
     #   env: 
     #     ECR_REGISTRY: ${{ inputs.ecr_registry }}
     #     ECR_REPOSITORY: ${{ inputs.service_name }} # repository name = service_name
     #     IMAGE_TAG: ${{ inputs.image_tag }}
     #   run: |
-    #     docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ${{ inputs.dockerfile_path}}
+    #     docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ${dockerfile_path}
     #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
