@@ -34,6 +34,11 @@ inputs:
 env:
   code_artifact_uri: 'platforma-323341875315.d.codeartifact.us-west-2.amazonaws.com'
   dockerfile_path: './Dockerfile'
+  AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key }}
+  AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_key }}
+  AWS_SESSION_TOKEN: ${{ inputs.aws_session_token }}
+  AWS_DEFAULT_REGION: ${{ inputs.aws_region }}
+  ECR_REPOSITORY: ${{ inputs.service_name }} # repository name = service_name  
 
 runs:
   using: "composite"
@@ -41,12 +46,12 @@ runs:
     # Check for ecr repository
     - name: ECR validation
       id: ecr-validator
-      env:
-        AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key }}
-        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_key }}
-        AWS_SESSION_TOKEN: ${{ inputs.aws_session_token }}
-        AWS_DEFAULT_REGION: 'us-west-2'
-        ECR_REPOSITORY: ${{ inputs.service_name }} # repository name = service_name
+      # env:
+      #   AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key }}
+      #   AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_key }}
+      #   AWS_SESSION_TOKEN: ${{ inputs.aws_session_token }}
+      #   AWS_DEFAULT_REGION: ${{ inputs.aws_region }}
+      #   ECR_REPOSITORY: ${{ inputs.service_name }} # repository name = service_name
       run: |
         IMAGE_META="$( aws ecr describe-images --repository-name=${ECR_REPOSITORY} )"
         if [[ $? == 0 ]]; then
@@ -61,6 +66,7 @@ runs:
         echo "Env - ${{ inputs.environment }}"
         echo "ECR Repo - ${{ inputs.ecr_registry }}"
         echo "Image tag - ${{ inputs.image_tag }}"
+        echo "ENV Variable - $AWS_ACCESS_KEY_ID"
       shell: bash
 
     # build and push the image to ecr
