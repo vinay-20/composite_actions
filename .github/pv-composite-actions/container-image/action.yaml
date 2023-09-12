@@ -38,21 +38,15 @@ env:
 runs:
   using: "composite"
   steps:
-    env:
+    # Check for ecr repository
+    - name: ECR validation
+      id: ecr-validator
+      env:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_key }}
         AWS_SESSION_TOKEN: ${{ inputs.aws_session_token }}
         AWS_DEFAULT_REGION: ${{ inputs.aws_region }}
-        ECR_REPOSITORY: ${{ inputs.service_name }} # repository name = service_name  
-    # Check for ecr repository
-    - name: ECR validation
-      id: ecr-validator
-      # env:
-      #   AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key }}
-      #   AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_key }}
-      #   AWS_SESSION_TOKEN: ${{ inputs.aws_session_token }}
-      #   AWS_DEFAULT_REGION: ${{ inputs.aws_region }}
-      #   ECR_REPOSITORY: ${{ inputs.service_name }} # repository name = service_name
+        ECR_REPOSITORY: ${{ inputs.service_name }} # repository name = service_name
       run: |
         IMAGE_META="$( aws ecr describe-images --repository-name=${ECR_REPOSITORY} )"
         if [[ $? == 0 ]]; then
@@ -68,6 +62,7 @@ runs:
         echo "ECR Repo - ${{ inputs.ecr_registry }}"
         echo "Image tag - ${{ inputs.image_tag }}"
         echo "ENV Variable - $AWS_ACCESS_KEY_ID"
+        echo "ENV Variable - $AWS_SECRET_ACCESS_KEY"
       shell: bash
 
     # build and push the image to ecr
