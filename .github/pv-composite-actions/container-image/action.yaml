@@ -34,15 +34,16 @@ inputs:
 env:
   code_artifact_uri: 'platforma-323341875315.d.codeartifact.us-west-2.amazonaws.com'
   dockerfile_path: './Dockerfile'
-  AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key }}
-  AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_key }}
-  AWS_SESSION_TOKEN: ${{ inputs.aws_session_token }}
-  AWS_DEFAULT_REGION: ${{ inputs.aws_region }}
-  ECR_REPOSITORY: ${{ inputs.service_name }} # repository name = service_name  
 
 runs:
   using: "composite"
   steps:
+    env:
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_key }}
+        AWS_SESSION_TOKEN: ${{ inputs.aws_session_token }}
+        AWS_DEFAULT_REGION: ${{ inputs.aws_region }}
+        ECR_REPOSITORY: ${{ inputs.service_name }} # repository name = service_name  
     # Check for ecr repository
     - name: ECR validation
       id: ecr-validator
