@@ -42,7 +42,11 @@ inputs:
     required: true
   session_token:
     required: true
-  repository_name:
+  service_name:
+    required: true
+  environment:
+    required: true
+  ecr_repository:
     required: true
 
 runs:
@@ -94,17 +98,19 @@ runs:
         if [[ $? == 0 ]]; then
             IMAGE_TAG=$( echo ${IMAGE_META} | jq '.imageDetails[0].imageTags[0]' -r )
             echo "Found Image with the name ${{ inputs.repository_name }} and the current tag is $IMAGE_TAG"
-        else
-            echo "repository with the name ${{ inputs.repository_name }} not"
-            exit 1
         fi
       shell: bash
 
+    - name: outputs
+      run: |
+        echo ${{ inputs.service_name }}
+        echo ${{ inputs.environment }}
+        echo ${{ inputs.ecr_repository }}
+        
     # build and push the image to ecr
     # - name: Login to Amazon ECR
     #   id: login-ecr
     #   uses: aws-actions/amazon-ecr-login@v1
-    #   # environment variables specific to ecr
     #   env: 
     #     ECR_REGISTRY: ${{ inputs.ecr_registry }}
     #     ECR_REPOSITORY: ${{ inputs.service_name }} # repository name = service_name
