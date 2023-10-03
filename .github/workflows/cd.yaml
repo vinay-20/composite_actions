@@ -1,0 +1,22 @@
+name: 'cd_builder'
+on:
+  workflow_call:
+    environment:
+      description: 'Name of the environment'
+      required: true
+      type: string
+    aws_region:
+      description: 'AWS region to be set for cli operations'
+      required: true
+      type: string
+
+jobs:
+  cd_builder:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }} # github environments
+    steps:
+      - name: dynamic-loader
+        run: | 
+          echo "Env is - ${{ inputs.environment }}"
+          echo "Env is - ${{ inputs.aws_region }}"
+        bash: shell
