@@ -1,14 +1,15 @@
 name: 'cd_builder'
 on:
   workflow_call:
-    environment:
-      description: 'Name of the environment'
-      required: true
-      type: string
-    aws_region:
-      description: 'AWS region to be set for cli operations'
-      required: true
-      type: string
+    inputs:
+      environment:
+        description: 'Name of the environment'
+        required: true
+        type: string
+      aws_region:
+        description: 'AWS region to be set for cli operations'
+        required: true
+        type: string
 
 jobs:
   cd_builder:
