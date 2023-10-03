@@ -20,4 +20,4 @@ jobs:
         run: | 
           echo "Env is - ${{ inputs.environment }}"
           echo "Env is - ${{ inputs.aws_region }}"
-        bash: shell
+        shell: bash
