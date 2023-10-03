@@ -19,5 +19,5 @@ jobs:
       - name: dynamic-loader
         run: | 
           echo "Env is - ${{ inputs.environment }}"
-          echo "Env is - ${{ inputs.region }}"
+          echo "Region is - ${{ inputs.region }}"
         shell: bash
